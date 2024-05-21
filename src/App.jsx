@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <div>
-        <h1 className="font-bold text-pink-500 text-3x1 text-center mx-auto">
+        <h1 className="text-3x1 mx-auto text-center font-bold text-pink-500">
           Testing Tailwind and Prettier
         </h1>
         <a href="https://vitejs.dev" target="_blank">
