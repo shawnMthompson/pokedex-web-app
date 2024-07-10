@@ -6,12 +6,12 @@ import WorkTable from "./components/WorkTable"; // Importing WorkTable component
 function App() {
   return (
     <>
-      <div className="text-blue-500 p-10" id="test">
+      <div className="p-10 text-blue-500" id="test">
         <h1>Hello, World!</h1>
       </div>
-      < EducationTable />
-      < ProjectCard />
-      < WorkTable />
+      <EducationTable />
+      <ProjectCard />
+      <WorkTable />
     </>
   );
 }
