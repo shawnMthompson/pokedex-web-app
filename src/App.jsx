@@ -3,7 +3,7 @@ import "./App.css"; // Importing CSS file
 function App() {
   return (
     <>
-      <div className="p-10 text-blue-500" id="test">
+      <div className="p-10 text-blue-500">
         <h1>Hello, World!</h1>
       </div>
     </>
