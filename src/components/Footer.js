@@ -15,7 +15,13 @@ export default function Footer() {
         <div className="flex items-center">
           <p className="mr-1">Powered By</p>
           <a target="_blank" href="https://pokeapi.co">
-            <Image src="/pokeAPI.png" alt="pokeAPI" width={60} height={20} />
+            <Image
+              src="/pokeAPI.png"
+              alt="pokeAPI"
+              width={60}
+              height={48}
+              className="h-auto w-auto"
+            />
           </a>
         </div>
       </div>
@@ -23,9 +29,9 @@ export default function Footer() {
         <Image
           src="/pokeball.png"
           alt="pokeballIcon"
-          width={54}
+          width={48}
           height={48}
-          className="mb-2"
+          className="h-auto w-auto mb-4"
         />
         <p>
           All Pokémon content and materials are trademarks and copyrights of
