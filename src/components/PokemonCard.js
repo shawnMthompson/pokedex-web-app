@@ -1,9 +1,10 @@
 import Image from "next/image";
 
-export default function PokemonCard({ pokemon }) {
+// More responsive work needs to be done here still.
 
+export default function PokemonCard({ pokemon }) {
   return (
-    <div className="w-full text-white bg-gray-800 border border-gray-200 max-w-52 rounded-lg shadow sm:p-6 md:p-8 m-2">
+    <div className="text-white bg-gray-800 border border-gray-200 max-w-52 rounded-lg shadow p-4 m-2">
       <Image
         src={pokemon.sprite}
         alt="Pokemon Sprite"
