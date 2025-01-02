@@ -8,11 +8,11 @@ export default function Footer() {
   return (
     <div className="bg-gray-500 text-white font-bold p-4 flex flex-col items-center">
       <div className="w-full flex justify-between items-center">
-        <div className="flex items-center">
+        <div className="flex items-center text-sm sm:text-sm lg:text-lg p-4">
           <FaRegCopyright />
           <p className="ml-1">PokéIndex {year}</p>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center text-sm sm:text-sm lg:text-lg p-4">
           <p className="mr-1">Powered By</p>
           <a target="_blank" href="https://pokeapi.co">
             <Image
@@ -25,7 +25,7 @@ export default function Footer() {
           </a>
         </div>
       </div>
-      <div className="flex flex-col items-center text-center text-sm">
+      <div className="flex flex-col items-center text-center text-sm sm:text-sm lg:text-lg">
         <Image
           src="/pokeball.png"
           alt="pokeballIcon"

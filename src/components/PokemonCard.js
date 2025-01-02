@@ -4,20 +4,19 @@ import Image from "next/image";
 
 export default function PokemonCard({ pokemon }) {
   return (
-    <div className="text-white bg-gray-800 border border-gray-200 rounded-lg shadow p-4 m-2">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden text-gray-500">
       <Image
         src={pokemon.sprite}
         alt="Pokemon Sprite"
         height={256}
         width={256}
-        className="mx-auto mb-2"
-      ></Image>
-      <h2 className="text-2xl font-extrabold text-white text-center mb-5 mt-5">
-        #{pokemon.id}
-      </h2>
-      <h3 className="text-xl font-bold text-white text-center">
-        {pokemon.name}
-      </h3>
+        priority={true}
+        className="p-4"
+      />
+      <div className="p-4">
+        <h2 className="text-xl font-bold">#{pokemon.id}</h2>
+        <h3 className="text-lg">{pokemon.name}</h3>
+      </div>
     </div>
   );
 }

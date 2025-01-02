@@ -1,5 +1,4 @@
 export function formatPokemon(rawData) {
-  console.log(rawData.sprites);
   return {
     id: rawData.id,
     name: capitalizeName(rawData.name),
