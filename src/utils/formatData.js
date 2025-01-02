@@ -1,8 +1,9 @@
 export function formatPokemon(rawData) {
+  console.log(rawData.sprites);
   return {
     id: rawData.id,
     name: capitalizeName(rawData.name),
-    sprite: rawData.sprites.front_default,
+    sprite: rawData.sprites.other['official-artwork'].front_default,
     types: rawData.types.map((typeInfo) => capitalizeName(typeInfo.type.name)),
   };
 }
