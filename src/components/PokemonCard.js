@@ -1,10 +1,17 @@
-import Image from "next/image";
+"use client";
 
-// More responsive work needs to be done here still.
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function PokemonCard({ pokemon }) {
+  const router = useRouter();
+  const handleClick = () => router.push(`/pokemon/${pokemon.name}`);
+
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden text-gray-500">
+    <div
+      onClick={handleClick}
+      className="bg-white shadow-md rounded-lg overflow-hidden text-gray-500"
+    >
       <Image
         src={pokemon.sprite}
         alt="Pokemon Sprite"
