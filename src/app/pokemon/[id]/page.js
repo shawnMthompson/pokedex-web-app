@@ -1,3 +1,10 @@
+"use client";
+
+import { useParams } from "next/navigation";
+
 export default function PokemonPage() {
-  return <p>Pokemon Page</p>;
+  const params = useParams();
+  const pokemonID = params.id;
+
+  return <p>{pokemonID} page</p>;
 }
