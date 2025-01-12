@@ -13,11 +13,27 @@ export default function PokemonGrid() {
   const limit = 36;
 
   useEffect(() => {
+    // Reset the state when the component mounts
+    setPokemonList([]);
+    setHasMore(true);
+    setPage(1);
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const offset = (page - 1) * limit;
       const data = await fetchAndFormatAllPokemon(limit, offset);
-      setPokemonList((prevList) => [...prevList, ...data]);
+
+      // Filter out duplicates
+      setPokemonList((prevList) => {
+        const newList = data.filter(
+          (newPokemon) =>
+            !prevList.some((pokemon) => pokemon.id === newPokemon.id)
+        );
+        return [...prevList, ...newList];
+      });
+
       setLoading(false);
       if (data.length === 0 || data.length < limit) {
         setHasMore(false);
@@ -61,8 +77,8 @@ export default function PokemonGrid() {
           }
         >
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
-            {pokemonList.map((pokemon) => (
-              <PokemonCard key={pokemon.id} pokemon={pokemon} />
+            {pokemonList.map((pokemon, index) => (
+              <PokemonCard key={`${pokemon.id}-${index}`} pokemon={pokemon} />
             ))}
           </div>
         </InfiniteScroll>
