@@ -10,7 +10,7 @@ export default function PokemonGrid() {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const limit = 36;
+  const limit = 24;
 
   useEffect(() => {
     // Reset the state when the component mounts
@@ -53,7 +53,7 @@ export default function PokemonGrid() {
     <div className="container mx-auto p-4">
       {loading && page === 1 ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
-          {Array.from({ length: 36 }).map((_, index) => (
+          {Array.from({ length: 24 }).map((_, index) => (
             <div
               key={`loader-${index}`}
               className="bg-gray-200 animate-pulse h-64 w-full rounded-lg"
@@ -67,7 +67,7 @@ export default function PokemonGrid() {
           hasMore={hasMore}
           loader={
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
-              {Array.from({ length: 36 }).map((_, index) => (
+              {Array.from({ length: 24 }).map((_, index) => (
                 <div
                   key={`loader-${index}`}
                   className="bg-gray-200 animate-pulse h-64 w-full rounded-lg"
