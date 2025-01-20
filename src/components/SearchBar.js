@@ -31,7 +31,7 @@ export default function SearchBar() {
 
   const handleClick = (pokemon) => {
     setTimeout(() => {
-      router.push(`/pokemon/${pokemon.name}`);
+      router.push(`/pokemon/${pokemon.name.toLowerCase()}`);
     }, 100);
   };
 

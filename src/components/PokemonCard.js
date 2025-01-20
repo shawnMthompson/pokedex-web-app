@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 
 export default function PokemonCard({ pokemon }) {
   const router = useRouter();
-  const handleClick = () => router.push(`/pokemon/${pokemon.name}`);
+  const handleClick = () => router.push(`/pokemon/${pokemon.name.toLowerCase()}`);
 
   return (
     <div
       onClick={handleClick}
-      className="bg-white shadow-md rounded-lg overflow-hidden text-gray-500"
+      className="bg-white shadow-md rounded-lg overflow-hidden text-gray-500 cursor-pointer"
     >
       <Image
         src={pokemon.sprite}
