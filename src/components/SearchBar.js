@@ -56,15 +56,12 @@ export default function SearchBar() {
         <div className="flex">
           <input
             type="text"
-            className="form-input bg-white outline-none px-4 py-2 text-black rounded-l-md w-full"
+            className="form-input bg-white outline-none px-4 py-2 text-black rounded-md w-full"
             placeholder="Search Pokemon..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={handleFocus}
           />
-          <button className="bg-white outline-none px-4 py-2 font-bold text-black rounded-r-md">
-            v
-          </button>
         </div>
         {isFocused && results.length > 0 && (
           <div className="absolute left-0 right-0 bg-white border border-gray-300 rounded mt-12 max-h-64 overflow-y-auto z-10">
