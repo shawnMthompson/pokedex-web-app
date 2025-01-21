@@ -10,6 +10,8 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        cardBase: "var(--cardBase)",
+        cardShadow: "var(--cardShadow)",
       },
     },
   },

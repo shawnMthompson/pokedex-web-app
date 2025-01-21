@@ -3,15 +3,50 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #a89b8c;
+  --foreground: #ffffff;
+  --cardBase: #50444c;
+  --cardShadow: #807575;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #2e2a2c;
+    --foreground: #ffffff;
   }
+}
+
+@keyframes upAndDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.hover\:up-and-down:hover {
+  animation: upAndDown 2s ease-in-out infinite;
+}
+
+@keyframes jiggle {
+  0%, 100% {
+    transform: rotate(0deg) scale(1.02);
+  }
+  25% {
+    transform: rotate(-1deg) scale(1.02);
+  }
+  50% {
+    transform: rotate(1deg) scale(1.02);
+  }
+  75% {
+    transform: rotate(-1deg) scale(1.02);
+  }
+}
+
+.hover\:jiggle:hover {
+  animation: jiggle 0.3s ease-in-out;
+  transform: scale(1.02);
 }
 
 body {
