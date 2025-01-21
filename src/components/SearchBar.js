@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { debounce } from "lodash";
 import { searchPokemon } from "@/utils/searchQuery";
 import { fetchAndFormatAllPokemon } from "@/utils/fetchAllPokemon";
 import { useRouter } from "next/navigation";
@@ -11,12 +12,13 @@ export default function SearchBar() {
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const [isFocused, setIsFocused] = useState(false); // State to track focus
+  const [isFocused, setIsFocused] = useState(false);
 
-  useEffect(() => {
-    const fetchResults = async () => {
-      if (query) {
-        const searchResults = await searchPokemon(query);
+  // Debounced search function
+  const debouncedSearch = useCallback(  // May have to re-work this function to accept an in-line function. It works for now though.
+    debounce(async (searchQuery) => {
+      if (searchQuery) {
+        const searchResults = await searchPokemon(searchQuery);
         setResults(searchResults);
       } else if (isFocused) {
         const defaultResults = await fetchAndFormatAllPokemon(14, 0);
@@ -24,10 +26,24 @@ export default function SearchBar() {
       } else {
         setResults([]);
       }
-    };
+    }, 300), // Debounce delay 
+    [isFocused]
+  );
 
-    fetchResults();
-  }, [query, isFocused]);
+  useEffect(() => {
+    debouncedSearch(query);
+  }, [query, debouncedSearch]);
+
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter" && query) {
+      const selectedPokemon = results.find(
+        (pokemon) => pokemon.name.toLowerCase() === query.toLowerCase()
+      );
+      if (selectedPokemon) {
+        router.push(`/pokemon/${selectedPokemon.name.toLowerCase()}`);
+      }
+    }
+  }
 
   const handleClick = (pokemon) => {
     setTimeout(() => {
@@ -60,6 +76,7 @@ export default function SearchBar() {
             placeholder="Search Pokemon..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleEnterKey}
             onFocus={handleFocus}
           />
         </div>

@@ -20,7 +20,7 @@ export default function Footer() {
               alt="pokeAPI"
               width={60}
               height={48}
-              className="h-auto w-auto"
+              className="h-auto w-auto transition-shadow duration-300 hover:jiggle"
             />
           </a>
         </div>
