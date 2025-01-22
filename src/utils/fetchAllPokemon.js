@@ -2,7 +2,7 @@ import { formatPokemon } from "@/utils/formatData";
 import { fetchPokemon } from "@/utils/fetchPokemon";
 
 const baseURL = "https://pokeapi.co/api/v2";
-const MAX_POKEMON_ID = 1025;
+const MAX_POKEMON_ID = 1024;
 
 // Fetch a list of pokemon with basic information (their names)
 export async function fetchAllPokemon(limit, offset) {
