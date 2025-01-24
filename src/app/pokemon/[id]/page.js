@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { fetchPokemon } from "@/utils/fetchPokemon";
 import { formatPokemon } from "@/utils/formatData";
+import Image from "next/image";
 
 export async function fetchAndFormatPokemon(pokemonID) {
   const lowercasedID = pokemonID.toLowerCase();
@@ -41,11 +42,43 @@ export default function PokemonPage() {
     return <p>Failed to load Pokémon data.</p>;
   }
 
+  const pokemonDetails = [
+    { label: "Pokedex ID", value: pokemon.id },
+    { label: "Introduced", value: "" }, // Generation
+    { label: "Category", value: "" }, // 'X' Pokemon (e.g. Bulbsaur is the Seed Pokemon)
+    { label: "Weight", value: "" },
+    { label: "Height", value: "" },
+    { label: "Abilities", value: "\n" },  // Ordered List of Abilities separated by new line
+    { label: "Shape", value: "" },
+    { label: "Color", value: "" },
+  ];
+
   return (
-    <div>
-      <h1>{pokemon.name}</h1>
-      <p>ID: {pokemon.id}</p>
-      <p>Types: {pokemon.types.join(", ")}</p>
+    <div className="mx-auto flex justify-between p-4 w-2/3">
+      <div id="row1">
+        <h1 className="text-6xl font-bold mb-4">{pokemon.name}</h1>
+        <p className="text-xl mb-4">Types: {pokemon.types.join(", ")}</p>
+        <h3 className="mb-4">Description: Lorem Ipsum</h3>
+        <table>
+          <tbody className="text-left">
+            {pokemonDetails.map((detail, index) => (
+              <tr key={index}>
+                <th className="font-bold text-lg">{detail.label}</th>
+                <td className="text-lg">{detail.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <Image
+          src={pokemon.sprite}
+          alt="Pokemon Sprite"
+          height={256}
+          width={256}
+          priority={true}
+        />
+      </div>
     </div>
   );
 }
