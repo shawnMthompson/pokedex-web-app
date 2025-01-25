@@ -6,6 +6,7 @@ import { fetchPokemon } from "@/utils/fetchPokemon";
 import { formatPokemon } from "@/utils/formatData";
 import SearchBar from "@/components/SearchBar";
 import Image from "next/image";
+import PokemonType from "@/components/PokemonType";
 
 export async function fetchAndFormatPokemon(pokemonID) {
   const lowercasedID = pokemonID.toLowerCase();
@@ -42,6 +43,8 @@ export default function PokemonPage() {
   if (!pokemon) {
     return <p>Failed to load Pokémon data.</p>;
   }
+
+  console.log("Pokemon types:", pokemon.types); // Add this line to debug
 
   const generationRanges = [
     { min: 1, max: 151, generation: "I" },
@@ -101,9 +104,11 @@ export default function PokemonPage() {
           <h1 className="text-6xl font-bold mb-4 text-center md:text-left">
             {pokemon.name}
           </h1>
-          <p className="text-xl mb-4 text-center md:text-left">
-            Types: {pokemon.types.join(", ")}
-          </p>
+          <div className="flex justify-center md:justify-start mb-4 space-x-4">
+            {pokemon.types.map((type) => (
+              <PokemonType key={type} type={type} />
+            ))}
+          </div>
           <h3 className="mb-4 text-center md:text-left">
             Description: Lorem Ipsum
           </h3>
