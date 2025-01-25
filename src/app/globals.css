@@ -25,6 +25,10 @@
   }
 }
 
+.up-and-down {
+  animation: upAndDown 2s ease-in-out infinite;
+}
+
 .hover\:up-and-down:hover {
   animation: upAndDown 2s ease-in-out infinite;
 }

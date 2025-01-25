@@ -4,7 +4,7 @@ let cachedPokemon = [];
 
 export async function searchPokemon(query) {
   if (cachedPokemon.length === 0) {
-    const limit = 1024; // All pokemon as of Jan 2025
+    const limit = 1025; // All pokemon as of Jan 2025
     const offset = 0;
     cachedPokemon = await fetchAndFormatAllPokemon(limit, offset);
   }
