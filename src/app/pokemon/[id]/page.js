@@ -43,41 +43,52 @@ export default function PokemonPage() {
   }
 
   const pokemonDetails = [
-    { label: "Pokedex ID", value: pokemon.id },
+    { label: "Pokedex ID", value: `#${pokemon.id}` },
     { label: "Introduced", value: "" }, // Generation
     { label: "Category", value: "" }, // 'X' Pokemon (e.g. Bulbsaur is the Seed Pokemon)
     { label: "Weight", value: "" },
     { label: "Height", value: "" },
-    { label: "Abilities", value: "\n" },  // Ordered List of Abilities separated by new line
+    { label: "Abilities", value: "\n" }, // Ordered List of Abilities separated by new line
     { label: "Shape", value: "" },
     { label: "Color", value: "" },
   ];
 
   return (
-    <div className="mx-auto flex justify-between p-4 w-2/3">
-      <div id="row1">
-        <h1 className="text-6xl font-bold mb-4">{pokemon.name}</h1>
-        <p className="text-xl mb-4">Types: {pokemon.types.join(", ")}</p>
-        <h3 className="mb-4">Description: Lorem Ipsum</h3>
-        <table>
-          <tbody className="text-left">
-            {pokemonDetails.map((detail, index) => (
-              <tr key={index}>
-                <th className="font-bold text-lg">{detail.label}</th>
-                <td className="text-lg">{detail.value}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div>
+    <div className="mx-auto flex flex-col md:flex-row justify-between p-4 w-full md:w-2/3">
+      <div className="flex justify-center items-center md:w-1/2 mt-8 md:mt-0 order-1 md:order-2">
         <Image
           src={pokemon.sprite}
           alt="Pokemon Sprite"
           height={256}
           width={256}
           priority={true}
+          className="rounded-lg"
         />
+      </div>
+      <div id="row1" className="md:w-1/2 order-2 md:order-none">
+        <h1 className="text-6xl font-bold mb-4 text-center md:text-left">
+          {pokemon.name}
+        </h1>
+        <p className="text-xl mb-4 text-center md:text-left">
+          Types: {pokemon.types.join(", ")}
+        </p>
+        <h3 className="mb-4 text-center md:text-left">
+          Description: Lorem Ipsum
+        </h3>
+        <table className="w-full md:w-4/5 border-collapse">
+          <tbody>
+            {pokemonDetails.map((detail, index) => (
+              <tr key={index} className="border-b border-gray-400">
+                <th className="font-bold text-lg py-2 pr-4 text-left w-1/2 text-nowrap">
+                  {detail.label}
+                </th>
+                <td className="text-lg py-2 pl-4 text-left w-1/2">
+                  {detail.value}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
