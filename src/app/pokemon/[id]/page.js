@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { fetchPokemon } from "@/utils/fetchPokemon";
 import { formatPokemon } from "@/utils/formatData";
+import { useRouter } from "next/navigation";
+import HeaderLogo from "../../../../public/logo.png"
 import SearchBar from "@/components/SearchBar";
 import Image from "next/image";
 import PokemonType from "@/components/PokemonType";
@@ -20,6 +22,9 @@ export default function PokemonPage() {
   const pokemonID = params.id;
   const [pokemon, setPokemon] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
+  const handleClick = () => router.push("/");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,9 +88,7 @@ export default function PokemonPage() {
     <>
       <div>
         <div className="bg-cardBase p-2 flex justify-evenly items-center">
-          <h1 className="text-white text-center text-xl sm:text-xl md:text-2xl lg:text-3xl">
-            PokéIndex
-          </h1>
+          <Image src={HeaderLogo} alt={"PokeIndex"} height={256} width={256} className="cursor-pointer hover:jiggle" onClick={handleClick}/>
           <SearchBar />
         </div>
       </div>
