@@ -17,7 +17,8 @@
 }
 
 @keyframes upAndDown {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -34,7 +35,8 @@
 }
 
 @keyframes jiggle {
-  0%, 100% {
+  0%,
+  100% {
     transform: rotate(0deg) scale(1.02);
   }
   25% {

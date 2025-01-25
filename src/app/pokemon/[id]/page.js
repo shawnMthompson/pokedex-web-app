@@ -43,28 +43,31 @@ export default function PokemonPage() {
     return <p>Failed to load Pokémon data.</p>;
   }
 
-const generationRanges = [
-  { min: 1, max: 151, generation: "I" },
-  { min: 152, max: 251, generation: "II" },
-  { min: 252, max: 386, generation: "III" },
-  { min: 387, max: 493, generation: "IV" },
-  { min: 494, max: 649, generation: "V" },
-  { min: 650, max: 721, generation: "VI" },
-  { min: 722, max: 809, generation: "VII" },
-  { min: 810, max: 905, generation: "VIII" },
-  { min: 906, max: 1025, generation: "IX" },
-];
+  const generationRanges = [
+    { min: 1, max: 151, generation: "I" },
+    { min: 152, max: 251, generation: "II" },
+    { min: 252, max: 386, generation: "III" },
+    { min: 387, max: 493, generation: "IV" },
+    { min: 494, max: 649, generation: "V" },
+    { min: 650, max: 721, generation: "VI" },
+    { min: 722, max: 809, generation: "VII" },
+    { min: 810, max: 905, generation: "VIII" },
+    { min: 906, max: 1025, generation: "IX" },
+  ];
 
-const pokemonGeneration = (id) => {
-  const generation = generationRanges.find(
-    (range) => id >= range.min && id <= range.max
-  );
-  return generation ? generation.generation : "Unknown";
-};
+  const pokemonGeneration = (id) => {
+    const generation = generationRanges.find(
+      (range) => id >= range.min && id <= range.max
+    );
+    return generation ? generation.generation : "Unknown";
+  };
 
   const pokemonDetails = [
     { label: "Pokedex ID", value: `#${pokemon.id}` },
-    { label: "Introduced", value: `Generation ${pokemonGeneration(pokemon.id)}` },
+    {
+      label: "Introduced",
+      value: `Generation ${pokemonGeneration(pokemon.id)}`,
+    },
     { label: "Category", value: "" }, // 'X' Pokemon (e.g. Bulbsaur is the Seed Pokemon)
     { label: "Weight", value: "" },
     { label: "Height", value: "" },

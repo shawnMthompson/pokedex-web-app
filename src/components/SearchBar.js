@@ -15,7 +15,8 @@ export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
 
   // Debounced search function
-  const debouncedSearch = useCallback(  // May have to re-work this function to accept an in-line function. It works for now though.
+  const debouncedSearch = useCallback(
+    // May have to re-work this function to accept an in-line function. It works for now though.
     debounce(async (searchQuery) => {
       if (searchQuery) {
         const searchResults = await searchPokemon(searchQuery);
@@ -26,7 +27,7 @@ export default function SearchBar() {
       } else {
         setResults([]);
       }
-    }, 300), // Debounce delay 
+    }, 300), // Debounce delay
     [isFocused]
   );
 
@@ -43,7 +44,7 @@ export default function SearchBar() {
         router.push(`/pokemon/${selectedPokemon.name.toLowerCase()}`);
       }
     }
-  }
+  };
 
   const handleClick = (pokemon) => {
     setTimeout(() => {
