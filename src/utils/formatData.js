@@ -7,6 +7,20 @@ export function formatPokemon(rawData) {
   };
 }
 
+export function formatPokemonSpecies(rawData) {
+  return {
+    color: capitalizeName(rawData.color.name),
+    description: cleanName(rawData.flavor_text_entries[1].flavor_text),
+  };
+}
+
 function capitalizeName(name) {
   return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+function cleanName(name) {
+  return name
+    .replace(/\n/g, " ")
+    .replace(/\u000c/g, " ")
+    .replace(".", ". ");
 }

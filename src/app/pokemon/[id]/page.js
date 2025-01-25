@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { fetchPokemon } from "@/utils/fetchPokemon";
 import { formatPokemon } from "@/utils/formatData";
+import { fetchPokemonSpecies } from "@/utils/fetchPokemon";
+import { formatPokemonSpecies } from "@/utils/formatData";
 import { useRouter } from "next/navigation";
-import HeaderLogo from "../../../../public/logo.png"
+import HeaderLogo from "../../../../public/logo.png";
 import SearchBar from "@/components/SearchBar";
 import Image from "next/image";
 import PokemonType from "@/components/PokemonType";
@@ -14,6 +16,13 @@ export async function fetchAndFormatPokemon(pokemonID) {
   const lowercasedID = pokemonID.toLowerCase();
   const rawData = await fetchPokemon(lowercasedID);
   const formattedData = formatPokemon(rawData);
+  return formattedData;
+}
+
+export async function fetchAndFormatPokemonSpecies(pokemonID) {
+  const lowercasedID = pokemonID.toLowerCase();
+  const rawData = await fetchPokemonSpecies(lowercasedID);
+  const formattedData = formatPokemonSpecies(rawData);
   return formattedData;
 }
 
@@ -29,8 +38,9 @@ export default function PokemonPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchAndFormatPokemon(pokemonID);
-        setPokemon(data);
+        const pokemonData = await fetchAndFormatPokemon(pokemonID);
+        const speciesData = await fetchAndFormatPokemonSpecies(pokemonID);
+        setPokemon({ ...pokemonData, ...speciesData });
       } catch (error) {
         console.error("Error fetching Pokémon data:", error);
       } finally {
@@ -48,8 +58,6 @@ export default function PokemonPage() {
   if (!pokemon) {
     return <p>Failed to load Pokémon data.</p>;
   }
-
-  console.log("Pokemon types:", pokemon.types); // Add this line to debug
 
   const generationRanges = [
     { min: 1, max: 151, generation: "I" },
@@ -81,14 +89,24 @@ export default function PokemonPage() {
     { label: "Height", value: "" },
     { label: "Abilities", value: "\n" }, // Ordered List of Abilities separated by new line
     { label: "Shape", value: "" },
-    { label: "Color", value: "" },
+    { label: "Color", value: `${pokemon.color}` },
   ];
+
+  console.log(pokemon);
 
   return (
     <>
       <div>
         <div className="bg-cardBase p-2 flex justify-evenly items-center">
-          <Image src={HeaderLogo} alt={"PokeIndex"} height={256} width={256} className="cursor-pointer hover:jiggle" onClick={handleClick}/>
+          <Image
+            src={HeaderLogo}
+            alt={"PokeIndex"}
+            height={256}
+            width={256}
+            priority={true}
+            className="cursor-pointer hover:jiggle"
+            onClick={handleClick}
+          />
           <SearchBar />
         </div>
       </div>
@@ -112,8 +130,8 @@ export default function PokemonPage() {
               <PokemonType key={type} type={type} />
             ))}
           </div>
-          <h3 className="mb-4 text-center md:text-left">
-            Description: Lorem Ipsum
+          <h3 className="mb-4 md:text-left text-center text-2xl w-full md:w-3/4">
+            {pokemon.description}
           </h3>
           <table className="w-full md:w-4/5 border-collapse">
             <tbody>
