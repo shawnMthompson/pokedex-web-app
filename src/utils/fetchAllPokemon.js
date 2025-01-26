@@ -1,4 +1,4 @@
-import { formatPokemon } from "@/utils/formatData";
+import { formatPokemon } from "@/utils/formatPokemonData";
 import { fetchPokemon } from "@/utils/fetchPokemon";
 
 const baseURL = "https://pokeapi.co/api/v2";

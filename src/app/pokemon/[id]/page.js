@@ -2,15 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { fetchPokemon } from "@/utils/fetchPokemon";
-import { formatPokemon } from "@/utils/formatData";
-import { fetchPokemonSpecies } from "@/utils/fetchPokemon";
-import { formatPokemonSpecies } from "@/utils/formatData";
 import { useRouter } from "next/navigation";
-import HeaderLogo from "../../../../public/logo.png";
-import SearchBar from "@/components/SearchBar";
+import { fetchPokemon, fetchPokemonSpecies } from "@/utils/fetchPokemon";
+import { formatPokemon, formatPokemonSpecies } from "@/utils/formatPokemonData";
 import Image from "next/image";
+
+import SearchBar from "@/components/SearchBar";
 import PokemonType from "@/components/PokemonType";
+import HeaderLogo from "../../../../public/logo.png";
 
 export async function fetchAndFormatPokemon(pokemonID) {
   const lowercasedID = pokemonID.toLowerCase();
@@ -59,37 +58,37 @@ export default function PokemonPage() {
     return <p>Failed to load Pokémon data.</p>;
   }
 
-  const generationRanges = [
-    { min: 1, max: 151, generation: "I" },
-    { min: 152, max: 251, generation: "II" },
-    { min: 252, max: 386, generation: "III" },
-    { min: 387, max: 493, generation: "IV" },
-    { min: 494, max: 649, generation: "V" },
-    { min: 650, max: 721, generation: "VI" },
-    { min: 722, max: 809, generation: "VII" },
-    { min: 810, max: 905, generation: "VIII" },
-    { min: 906, max: 1025, generation: "IX" },
-  ];
-
-  const pokemonGeneration = (id) => {
-    const generation = generationRanges.find(
-      (range) => id >= range.min && id <= range.max
-    );
-    return generation ? generation.generation : "Unknown";
-  };
-
   const pokemonDetails = [
-    { label: "Pokedex ID", value: `#${pokemon.id}` },
+    {
+      label: "Pokedex ID",
+      value: `#${pokemon.id}`,
+    },
     {
       label: "Introduced",
-      value: `Generation ${pokemonGeneration(pokemon.id)}`,
+      value: pokemon.generation,
     },
-    { label: "Category", value: "" }, // 'X' Pokemon (e.g. Bulbsaur is the Seed Pokemon)
-    { label: "Weight", value: "" },
-    { label: "Height", value: "" },
-    { label: "Abilities", value: "\n" }, // Ordered List of Abilities separated by new line
-    { label: "Shape", value: "" },
-    { label: "Color", value: `${pokemon.color}` },
+    {
+      label: "Category",
+      value: pokemon.category,
+    },
+    {
+      label: "Height",
+      value: `${pokemon.height / 10} m`,
+    },
+    {
+      label: "Weight",
+      value: `${pokemon.weight / 10} kg`,
+    },
+    {
+      label: "Abilities",
+      value: pokemon.abilities
+        .map((ability, index) => `${index + 1}. ${ability}`)
+        .join("\n"),
+    },
+    {
+      label: "Color",
+      value: pokemon.color,
+    },
   ];
 
   console.log(pokemon);
@@ -140,7 +139,7 @@ export default function PokemonPage() {
                   <th className="font-bold text-lg py-2 pr-4 text-left w-1/2 text-nowrap">
                     {detail.label}
                   </th>
-                  <td className="text-lg py-2 pl-4 text-left w-1/2 text-nowrap">
+                  <td className="text-lg py-2 pl-4 text-left w-1/2 text-nowrap whitespace-pre-line">
                     {detail.value}
                   </td>
                 </tr>
