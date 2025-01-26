@@ -9,6 +9,9 @@ import Image from "next/image";
 
 import SearchBar from "@/components/SearchBar";
 import PokemonType from "@/components/PokemonType";
+import PokemonDetails from "@/components/PokemonDetails";
+import PokemonStats from "@/components/PokemonStats";
+import PokemonMoves from "@/components/PokemonMoves";
 import HeaderLogo from "../../../../public/logo.png";
 
 export async function fetchAndFormatPokemon(pokemonID) {
@@ -30,6 +33,7 @@ export default function PokemonPage() {
   const pokemonID = params.id;
   const [pokemon, setPokemon] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("details");
 
   const router = useRouter();
   const handleClick = () => router.push("/");
@@ -88,7 +92,7 @@ export default function PokemonPage() {
     {
       label: "Color",
       value: pokemon.color,
-    }
+    },
   ];
 
   const pokemonStats = [
@@ -119,8 +123,10 @@ export default function PokemonPage() {
     {
       label: "Total",
       value: pokemon.total,
-    }
+    },
   ];
+
+  const pokemonMoves = pokemon.moves;
 
   return (
     <>
@@ -161,20 +167,33 @@ export default function PokemonPage() {
           <h3 className="mb-4 md:text-left text-center text-2xl w-full md:w-3/4">
             {pokemon.description}
           </h3>
-          <table className="w-full md:w-4/5 border-collapse">
-            <tbody>
-              {pokemonDetails.map((detail, index) => (
-                <tr key={index} className="border-b border-gray-400">
-                  <th className="font-bold text-lg py-2 pr-4 text-left w-1/2 text-nowrap">
-                    {detail.label}
-                  </th>
-                  <td className="text-lg py-2 pl-4 text-left w-1/2 text-nowrap whitespace-pre-line">
-                    {detail.value}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="flex justify-center md:justify-start mb-4 space-x-4">
+            <button
+              onClick={() => setActiveTab("details")}
+              className="border-2 p-1 bg-cardShadow"
+            >
+              Details
+            </button>
+            <button
+              onClick={() => setActiveTab("stats")}
+              className="border-2 p-1 bg-cardShadow"
+            >
+              Stats
+            </button>
+            <button
+              onClick={() => setActiveTab("moves")}
+              className="border-2 p-1 bg-cardShadow"
+            >
+              Moves
+            </button>
+          </div>
+          <div className="max-h-[300px]">
+            {activeTab === "details" && (
+              <PokemonDetails details={pokemonDetails} />
+            )}
+            {activeTab === "stats" && <PokemonStats stats={pokemonStats} />}
+            {activeTab === "moves" && <PokemonMoves moves={pokemonMoves} />}
+          </div>
         </div>
       </div>
     </>

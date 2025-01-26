@@ -4,6 +4,7 @@ export function formatPokemon(rawData) {
     name: capitalize(rawData.name),
     sprite: rawData.sprites.other["official-artwork"].front_default,
     types: rawData.types.map((typeInfo) => capitalize(typeInfo.type.name)),
+    moves: rawData.moves.map((moveInfo) => cleanMove(moveInfo.move.name)),
     height: rawData.height,
     weight: rawData.weight,
     abilities: rawData.abilities.map((abilityInfo) => {
@@ -33,6 +34,10 @@ export function formatPokemonSpecies(rawData) {
 
 function capitalize(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function cleanMove(move) {
+  return move.replace("-", " ")
 }
 
 function cleanDescription(description) {
