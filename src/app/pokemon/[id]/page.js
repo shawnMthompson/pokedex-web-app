@@ -88,10 +88,39 @@ export default function PokemonPage() {
     {
       label: "Color",
       value: pokemon.color,
-    },
+    }
   ];
 
-  console.log(pokemon);
+  const pokemonStats = [
+    {
+      label: "HP",
+      value: pokemon.hp,
+    },
+    {
+      label: "Attack",
+      value: pokemon.attack,
+    },
+    {
+      label: "Defense",
+      value: pokemon.defense,
+    },
+    {
+      label: "Special Attack",
+      value: pokemon.special_attack,
+    },
+    {
+      label: "Special Defense",
+      value: pokemon.special_defense,
+    },
+    {
+      label: "Speed",
+      value: pokemon.speed,
+    },
+    {
+      label: "Total",
+      value: pokemon.total,
+    }
+  ];
 
   return (
     <>
@@ -120,7 +149,7 @@ export default function PokemonPage() {
             className="up-and-down"
           />
         </div>
-        <div id="row1" className="md:w-1/2 order-2 md:order-none">
+        <div className="md:w-1/2 order-2 md:order-none">
           <h1 className="text-6xl font-bold mb-4 text-center md:text-left">
             {pokemon.name}
           </h1>

@@ -12,6 +12,13 @@ export function formatPokemon(rawData) {
         ? `${abilityName} (Hidden Ability)`
         : abilityName;
     }),
+    hp: rawData.stats[0].base_stat,
+    attack: rawData.stats[1].base_stat,
+    defense: rawData.stats[2].base_stat,
+    special_attack: rawData.stats[3].base_stat,
+    special_defense: rawData.stats[4].base_stat,
+    speed: rawData.stats[5].base_stat,
+    total: rawData.stats.reduce((acc, stat) => acc + stat.base_stat, 0),
   };
 }
 
