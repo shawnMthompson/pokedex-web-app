@@ -16,7 +16,6 @@ export default function SearchBar() {
 
   // Debounced search function
   const debouncedSearch = useCallback(
-    // May have to re-work this function to accept an in-line function. It works for now though.
     debounce(async (searchQuery) => {
       if (searchQuery) {
         const searchResults = await searchPokemon(searchQuery);
@@ -27,13 +26,23 @@ export default function SearchBar() {
       } else {
         setResults([]);
       }
-    }, 300), // Debounce delay
+    }, 150), // Debounce delay
     [isFocused]
   );
 
   useEffect(() => {
     debouncedSearch(query);
   }, [query, debouncedSearch]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (isFocused) {
+        debouncedSearch(query);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId); // Cleanup to avoid memory leaks
+  }, [query, debouncedSearch, isFocused]);
 
   const handleEnterKey = (e) => {
     if (e.key === "Enter" && query) {

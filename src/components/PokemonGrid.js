@@ -37,6 +37,10 @@ export default function PokemonGrid() {
       setLoading(false);
       if (data.length === 0 || data.length < limit) {
         setHasMore(false);
+      } else {
+        // Prefetch next set of data
+        const nextOffset = page * limit;
+        fetchAndFormatAllPokemon(limit, nextOffset);
       }
     };
 
