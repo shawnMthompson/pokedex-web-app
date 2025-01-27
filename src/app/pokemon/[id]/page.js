@@ -12,6 +12,7 @@ import PokemonType from "@/components/PokemonType";
 import PokemonDetails from "@/components/PokemonDetails";
 import PokemonStats from "@/components/PokemonStats";
 import PokemonMoves from "@/components/PokemonMoves";
+import Footer from "@/components/Footer";
 import HeaderLogo from "../../../../public/logo.png";
 
 export async function fetchAndFormatPokemon(pokemonID) {
@@ -129,7 +130,7 @@ export default function PokemonPage() {
   const pokemonMoves = pokemon.moves;
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <div>
         <div className="bg-cardBase p-2 flex justify-evenly items-center">
           <Image
@@ -144,7 +145,7 @@ export default function PokemonPage() {
           <SearchBar />
         </div>
       </div>
-      <div className="mx-auto flex flex-col md:flex-row justify-between p-4 w-full md:w-2/3">
+      <div className="flex-grow mx-auto flex flex-col md:flex-row justify-between p-4 w-full md:w-2/3">
         <div className="flex justify-center items-center md:w-1/2 mt-8 md:mt-0 order-1 md:order-2">
           <Image
             src={pokemon.sprite}
@@ -187,7 +188,7 @@ export default function PokemonPage() {
               Moves
             </button>
           </div>
-          <div className="max-h-[300px]">
+          <div className="max-h-[600px]">
             {activeTab === "details" && (
               <PokemonDetails details={pokemonDetails} />
             )}
@@ -196,6 +197,7 @@ export default function PokemonPage() {
           </div>
         </div>
       </div>
-    </>
+      <Footer />
+    </div>
   );
 }
