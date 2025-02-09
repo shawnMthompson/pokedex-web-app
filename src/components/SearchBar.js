@@ -82,7 +82,7 @@ export default function SearchBar() {
         <div className="flex">
           <input
             type="text"
-            className="form-input bg-white outline-none px-4 py-2 text-black rounded-md w-full"
+            className="form-input bg-white outline-none px-4 py-2 text-black rounded-md w-full placeholder:text-sm md:placeholder:text-base"
             placeholder="Search Pokemon..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}

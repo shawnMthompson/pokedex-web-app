@@ -1,5 +1,6 @@
 "use client";
 
+import { FaArrowUpLong } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 
 export default function UpButton() {
@@ -33,9 +34,9 @@ export default function UpButton() {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="bg-cardBase text-white p-3 rounded-full shadow-lg focus:outline-none cursor-pointer"
+          className="bg-cardBase text-white p-3 rounded-full shadow-lg focus:outline-none cursor-pointer border-2 border-cardShadow"
         >
-          ↑
+          <FaArrowUpLong />
         </button>
       )}
     </div>

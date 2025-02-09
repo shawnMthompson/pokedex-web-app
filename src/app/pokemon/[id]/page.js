@@ -170,13 +170,17 @@ export default function PokemonPage() {
           <div className="flex justify-center md:justify-start mb-4 space-x-4">
             <button
               onClick={() => setActiveTab("details")}
-              className="border-2 p-1 bg-cardShadow"
+              className={`border-2 p-1 w-1/3 bg-cardShadow hover:jiggle ${
+                activeTab === "details" ? "bg-gray-500" : ""
+              }`}
             >
               Details
             </button>
             <button
               onClick={() => setActiveTab("stats")}
-              className="border-2 p-1 bg-cardShadow"
+              className={`border-2 p-1 w-1/3 bg-cardShadow hover:jiggle ${
+                activeTab === "stats" ? "bg-gray-500" : ""
+              }`}
             >
               Stats
             </button>
