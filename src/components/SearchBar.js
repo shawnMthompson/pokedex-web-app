@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { debounce } from "lodash";
 import { searchPokemon } from "@/utils/searchQuery";
 import { fetchAndFormatAllPokemon } from "@/utils/fetchAllPokemon";
@@ -15,34 +15,28 @@ export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
 
   // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce(async (searchQuery) => {
-      if (searchQuery) {
-        const searchResults = await searchPokemon(searchQuery);
-        setResults(searchResults);
-      } else if (isFocused) {
-        const defaultResults = await fetchAndFormatAllPokemon(14, 0);
-        setResults(defaultResults);
-      } else {
-        setResults([]);
-      }
-    }, 150), // Debounce delay
-    [isFocused]
-  );
-
   useEffect(() => {
-    debouncedSearch(query);
-  }, [query, debouncedSearch]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (isFocused) {
-        debouncedSearch(query);
+    const debouncedSearch = debounce(async (searchQuery, isFocused) => {
+      try {
+        if (searchQuery) {
+          const searchResults = await searchPokemon(searchQuery);
+          setResults(searchResults);
+        } else if (isFocused) {
+          const defaultResults = await fetchAndFormatAllPokemon(14, 0);
+          setResults(defaultResults);
+        } else {
+          setResults([]);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
       }
-    }, 1000);
+    }, 150); // Debounce delay
 
-    return () => clearInterval(intervalId); // Cleanup to avoid memory leaks
-  }, [query, debouncedSearch, isFocused]);
+    debouncedSearch(query, isFocused);
+    return () => {
+      debouncedSearch.cancel(); // Cleanup debounce on unmount
+    };
+  }, [query, isFocused]);
 
   const handleEnterKey = (e) => {
     if (e.key === "Enter" && query) {
