@@ -11,7 +11,6 @@ import SearchBar from "@/components/SearchBar";
 import PokemonType from "@/components/PokemonType";
 import PokemonDetails from "@/components/PokemonDetails";
 import PokemonStats from "@/components/PokemonStats";
-import PokemonMoves from "@/components/PokemonMoves";
 import Footer from "@/components/Footer";
 import HeaderLogo from "../../../../public/logo.png";
 
@@ -181,19 +180,12 @@ export default function PokemonPage() {
             >
               Stats
             </button>
-            <button
-              onClick={() => setActiveTab("moves")}
-              className="border-2 p-1 bg-cardShadow"
-            >
-              Moves
-            </button>
           </div>
           <div className="max-h-[600px]">
             {activeTab === "details" && (
               <PokemonDetails details={pokemonDetails} />
             )}
             {activeTab === "stats" && <PokemonStats stats={pokemonStats} />}
-            {activeTab === "moves" && <PokemonMoves moves={pokemonMoves} />}
           </div>
         </div>
       </div>
