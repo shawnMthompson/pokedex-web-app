@@ -16,7 +16,9 @@ export async function fetchPokemon(idOrName) {
 
 export async function fetchPokemonSpecies(idOrName) {
   try {
-    const response = await fetch(`${baseURL}/pokemon-species/${idOrName}`);
+    // Check if the name starts with "deoxys" and remove the suffix if it does. This needs to be done as a result of inconsistencies with PokeAPI.
+    const baseName = idOrName.startsWith("deoxys") ? "deoxys" : idOrName;
+    const response = await fetch(`${baseURL}/pokemon-species/${baseName}`);
     if (!response.ok) {
       throw new Error(
         `Failed to fetch pokemon species: ${response.statusText}`
