@@ -24,7 +24,7 @@ export async function fetchPokemonSpecies(idOrName) {
     return await response.json();
   } catch (error) {
     if (idOrName.startsWith("deoxys")) {
-      console.log("Re-handling Deoxys Fetch")
+      console.log("Re-handling Deoxys Fetch");
       return await fetchDeoxysFallback();
     }
   }
