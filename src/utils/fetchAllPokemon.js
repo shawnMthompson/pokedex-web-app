@@ -25,5 +25,6 @@ export async function fetchAndFormatAllPokemon(limit, offset) {
     })
   );
 
+  // Filter the list to include pokemon ids less than or equal to MAX_POKEMON_ID
   return formattedPokemonList.filter((pokemon) => pokemon.id <= MAX_POKEMON_ID);
 }

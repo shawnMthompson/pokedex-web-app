@@ -37,7 +37,7 @@ function capitalize(text) {
 }
 
 function cleanMove(move) {
-  return move.replace("-", " ")
+  return move.replace("-", " ");
 }
 
 function cleanDescription(description) {

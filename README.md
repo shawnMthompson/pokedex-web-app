@@ -3,7 +3,7 @@
 ## Installation
 
 ### Prerequisites
-- Node.js 18+ and npm/yarn
+- Node.js 18+ and npm
 - A GitHub account
 
 ### Basic Setup
@@ -16,10 +16,10 @@ cd pokedex-web-app
 
 2. Install dependencies:
 ```bash
-npm install   # or yarn install
+npm install
 ```
 
 3. Run the development server:
 ```bash
-npm run dev   # or yarn dev
+npm run dev
 ```
