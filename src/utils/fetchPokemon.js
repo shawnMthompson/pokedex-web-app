@@ -6,36 +6,43 @@ export async function fetchPokemon(idOrName) {
     if (!response.ok) {
       throw new Error(`Failed to fetch pokemon: ${response.statusText}`);
     }
-    const rawData = await response.json();
-    return rawData;
+    return await response.json();
   } catch (error) {
     console.error(`Error fetching pokemon: ${error}`);
     throw error;
   }
 }
 
-/**
- *  In hindsight, it doesn't make a whole lot of sense to check for a pokemon with "deoxys" as the starting characters all the time.
- *  I will modify this the next time I start actively working on this project to only handle it when the error gets thrown for deoxys .
- *  (as it did prior to my current solution.)
- * 
- * Plan: Refactor to handle this case ONLY when an error occurs for "deoxys"
- */
-
 export async function fetchPokemonSpecies(idOrName) {
   try {
-    // Check if the name starts with "deoxys" and remove the suffix if it does. This needs to be done as a result of inconsistencies with PokeAPI.
-    const baseName = idOrName.startsWith("deoxys") ? "deoxys" : idOrName;
-    const response = await fetch(`${baseURL}/pokemon-species/${baseName}`);
+    const response = await fetch(`${baseURL}/pokemon-species/${idOrName}`);
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch pokemon species: ${response.statusText}`
+        `Failed to fetch pokemon species for "${idOrName}": ${response.statusText}`
       );
     }
-    const rawData = await response.json();
-    return rawData;
+    return await response.json();
   } catch (error) {
-    console.error(`Error fetching pokemon species: ${error}`);
+    if (idOrName.startsWith("deoxys")) {
+      console.log("Re-handling Deoxys Fetch")
+      return await fetchDeoxysFallback();
+    }
+  }
+}
+
+async function fetchDeoxysFallback() {
+  try {
+    const fallbackResponse = await fetch(`${baseURL}/pokemon-species/deoxys`);
+    if (!fallbackResponse.ok) {
+      throw new Error(
+        `Failed to fetch fallback species for "deoxys": ${fallbackResponse.statusText}`
+      );
+    }
+    return await fallbackResponse.json();
+  } catch (fallbackError) {
+    console.error(
+      `Error fetching fallback species for "deoxys": ${fallbackError.message}`
+    );
     throw error;
   }
 }
