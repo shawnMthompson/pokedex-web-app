@@ -14,6 +14,14 @@ export async function fetchPokemon(idOrName) {
   }
 }
 
+/**
+ *  In hindsight, it doesn't make a whole lot of sense to check for a pokemon with "deoxys" as the starting characters all the time.
+ *  I will modify this the next time I start actively working on this project to only handle it when the error gets thrown for deoxys .
+ *  (as it did prior to my current solution.)
+ * 
+ * Plan: Refactor to handle this case ONLY when an error occurs for "deoxys"
+ */
+
 export async function fetchPokemonSpecies(idOrName) {
   try {
     // Check if the name starts with "deoxys" and remove the suffix if it does. This needs to be done as a result of inconsistencies with PokeAPI.
