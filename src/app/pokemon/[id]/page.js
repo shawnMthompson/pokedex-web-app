@@ -129,17 +129,36 @@ export default function PokemonPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <div>
-        <div className="bg-cardBase p-2 flex justify-evenly items-center">
-          <Image
-            src={HeaderLogo}
-            alt={"PokeIndex"}
-            height={256}
-            width={256}
-            priority={true}
-            className="cursor-pointer hover:jiggle"
-            onClick={handleClick}
-          />
-          <SearchBar />
+        <div className="bg-cardBase p-2">
+          {/* Desktop layout - horizontal */}
+          <div className="hidden md:flex justify-evenly items-center">
+            <Image
+              src={HeaderLogo}
+              alt={"PokeIndex"}
+              height={256}
+              width={256}
+              priority={true}
+              className="cursor-pointer hover:jiggle"
+              onClick={handleClick}
+            />
+            <SearchBar />
+          </div>
+
+          {/* Mobile layout - vertical stack */}
+          <div className="md:hidden flex flex-col items-center space-y-4">
+            <Image
+              src={HeaderLogo}
+              alt={"PokeIndex"}
+              height={200}
+              width={200}
+              priority={true}
+              className="cursor-pointer hover:jiggle"
+              onClick={handleClick}
+            />
+            <div className="w-full">
+              <SearchBar />
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex-grow mx-auto flex flex-col md:flex-row justify-between p-4 w-full md:w-2/3">

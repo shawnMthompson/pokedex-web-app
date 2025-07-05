@@ -68,7 +68,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="flex flex-wrap justify-center p-4">
+    <div className="flex flex-wrap justify-center p-2 md:p-4">
       <div
         className="relative flex flex-col w-full max-w-md"
         onBlur={handleBlur}
@@ -76,7 +76,7 @@ export default function SearchBar() {
         <div className="flex">
           <input
             type="text"
-            className="form-input bg-white outline-none px-4 py-2 text-black rounded-md w-full placeholder:text-sm md:placeholder:text-base"
+            className="form-input bg-white outline-none px-3 py-2 md:px-4 text-black rounded-md w-full placeholder:text-sm md:placeholder:text-base text-sm md:text-base"
             placeholder="Search Pokemon..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
