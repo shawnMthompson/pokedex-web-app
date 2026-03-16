@@ -1,16 +1,41 @@
 const baseURL = "https://pokeapi.co/api/v2";
 
 export async function fetchPokemon(idOrName) {
-  try {
-    const response = await fetch(`${baseURL}/pokemon/${idOrName}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch pokemon: ${response.statusText}`);
-    }
+  const normalized = String(idOrName).toLowerCase();
+  const response = await fetch(`${baseURL}/pokemon/${normalized}`);
+
+  if (response.ok) {
     return await response.json();
-  } catch (error) {
-    console.error(`Error fetching pokemon: ${error}`);
-    throw error;
   }
+
+  // Some lists (notably generation species lists) contain species names that are
+  // not valid pokemon endpoints. Resolve those to the default variety name.
+  if (response.status === 404) {
+    try {
+      const speciesData = await fetchPokemonSpecies(normalized);
+      const defaultVariety = speciesData.varieties?.find((v) => v.is_default);
+      const fallbackName = defaultVariety?.pokemon?.name;
+
+      if (fallbackName && fallbackName !== normalized) {
+        const fallbackResponse = await fetch(`${baseURL}/pokemon/${fallbackName}`);
+        if (fallbackResponse.ok) {
+          console.warn(
+            `[fetchPokemon] Resolved species "${normalized}" to default form "${fallbackName}"`
+          );
+          return await fallbackResponse.json();
+        }
+      }
+    } catch (speciesError) {
+      console.error(
+        `[fetchPokemon] Failed species fallback for "${normalized}":`,
+        speciesError
+      );
+    }
+  }
+
+  throw new Error(
+    `Failed to fetch pokemon "${normalized}": ${response.status} ${response.statusText}`
+  );
 }
 
 export async function fetchPokemonSpecies(idOrName) {
@@ -27,6 +52,7 @@ export async function fetchPokemonSpecies(idOrName) {
       console.log("Re-handling Deoxys Fetch");
       return await fetchDeoxysFallback();
     }
+    throw error;
   }
 }
 
@@ -43,6 +69,6 @@ async function fetchDeoxysFallback() {
     console.error(
       `Error fetching fallback species for "deoxys": ${fallbackError.message}`
     );
-    throw error;
+    throw fallbackError;
   }
 }

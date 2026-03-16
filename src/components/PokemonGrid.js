@@ -1,88 +1,53 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { fetchAndFormatAllPokemon } from "@/utils/fetchAllPokemon";
+import { usePokemonPagination } from "@/hooks/usePokemonPagination";
 import PokemonCard from "./PokemonCard";
 
-export default function PokemonGrid() {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const limit = 24;
+const GRID_CLASSES =
+  "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4";
 
-  useEffect(() => {
-    // Reset the state when the component mounts
-    setPokemonList([]);
-    setHasMore(true);
-    setPage(1);
-  }, []);
+function SkeletonGrid() {
+  return (
+    <div className={GRID_CLASSES}>
+      {Array.from({ length: 24 }).map((_, i) => (
+        <div key={i} className="bg-gray-200 animate-pulse h-64 w-full rounded-lg" />
+      ))}
+    </div>
+  );
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const offset = (page - 1) * limit;
-      const data = await fetchAndFormatAllPokemon(limit, offset);
+/**
+ * Renders a paginated, infinitely-scrolling grid of Pokemon cards.
+ *
+ * @param {Object|null} filter - Optional filter: { type: "fire" } or { generation: "generation-i" }
+ */
+export default function PokemonGrid({ filter = null }) {
+  const { pokemonList, hasMore, loading, error, fetchMore } =
+    usePokemonPagination(filter);
 
-      // Filter out duplicates
-      setPokemonList((prevList) => {
-        const newList = data.filter(
-          (newPokemon) =>
-            !prevList.some((pokemon) => pokemon.id === newPokemon.id)
-        );
-        return [...prevList, ...newList];
-      });
-
-      setLoading(false);
-      if (data.length === 0 || data.length < limit) {
-        setHasMore(false);
-      } else {
-        // Prefetch next set of data
-        const nextOffset = page * limit;
-        fetchAndFormatAllPokemon(limit, nextOffset);
-      }
-    };
-
-    fetchData();
-  }, [page]);
-
-  const fetchMoreData = useCallback(() => {
-    if (hasMore) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  }, [hasMore]);
+  if (error && pokemonList.length === 0) {
+    return (
+      <div className="container mx-auto p-4 text-center text-red-500">
+        Failed to load Pokémon. Please try refreshing the page.
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
-      {loading && page === 1 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
-          {Array.from({ length: 24 }).map((_, index) => (
-            <div
-              key={`loader-${index}`}
-              className="bg-gray-200 animate-pulse h-64 w-full rounded-lg"
-            ></div>
-          ))}
-        </div>
+      {loading && pokemonList.length === 0 ? (
+        <SkeletonGrid />
       ) : (
         <InfiniteScroll
           dataLength={pokemonList.length}
-          next={fetchMoreData}
+          next={fetchMore}
           hasMore={hasMore}
-          loader={
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
-              {Array.from({ length: 24 }).map((_, index) => (
-                <div
-                  key={`loader-${index}`}
-                  className="bg-gray-200 animate-pulse h-64 w-full rounded-lg"
-                ></div>
-              ))}
-            </div>
-          }
+          loader={<SkeletonGrid />}
         >
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
-            {pokemonList.map((pokemon, index) => (
-              <PokemonCard key={`${pokemon.id}-${index}`} pokemon={pokemon} />
+          <div className={GRID_CLASSES}>
+            {pokemonList.map((pokemon) => (
+              <PokemonCard key={pokemon.id} pokemon={pokemon} />
             ))}
           </div>
         </InfiniteScroll>
@@ -90,3 +55,4 @@ export default function PokemonGrid() {
     </div>
   );
 }
+
