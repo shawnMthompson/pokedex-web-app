@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { debounce } from "lodash";
-import { searchPokemon } from "@/utils/searchQuery";
-import { fetchAndFormatAllPokemon } from "@/utils/fetchAllPokemon";
+import { searchPokemon, getDefaultPokemonSuggestions } from "@/utils/searchQuery";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -13,30 +12,45 @@ export default function SearchBar() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
+  const latestRequestRef = useRef(0);
 
-  // Debounced search function
-  useEffect(() => {
-    const debouncedSearch = debounce(async (searchQuery, isFocused) => {
-      try {
-        if (searchQuery) {
-          const searchResults = await searchPokemon(searchQuery);
-          setResults(searchResults);
-        } else if (isFocused) {
-          const defaultResults = await fetchAndFormatAllPokemon(14, 0);
-          setResults(defaultResults);
-        } else {
-          setResults([]);
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (nextQuery, focused) => {
+        const requestId = ++latestRequestRef.current;
+
+        try {
+          if (!focused) {
+            if (requestId === latestRequestRef.current) {
+              setResults([]);
+            }
+            return;
+          }
+
+          const searchResults = nextQuery.trim()
+            ? await searchPokemon(nextQuery)
+            : await getDefaultPokemonSuggestions();
+
+          if (requestId === latestRequestRef.current) {
+            setResults(searchResults);
+          }
+        } catch (error) {
+          console.error("Error fetching search results:", error);
+          if (requestId === latestRequestRef.current) {
+            setResults([]);
+          }
         }
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-      }
-    }, 150); // Debounce delay
+      }, 150),
+    []
+  );
 
+  useEffect(() => {
     debouncedSearch(query, isFocused);
+
     return () => {
-      debouncedSearch.cancel(); // Cleanup debounce on unmount
+      debouncedSearch.cancel();
     };
-  }, [query, isFocused]);
+  }, [query, isFocused, debouncedSearch]);
 
   const handleEnterKey = (e) => {
     if (e.key === "Enter" && query) {

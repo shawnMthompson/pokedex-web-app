@@ -39,19 +39,47 @@ export async function fetchPokemon(idOrName) {
 }
 
 export async function fetchPokemonSpecies(idOrName) {
+  const normalized = String(idOrName).toLowerCase();
+
   try {
-    const response = await fetch(`${baseURL}/pokemon-species/${idOrName}`);
+    const response = await fetch(`${baseURL}/pokemon-species/${normalized}`);
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch pokemon species for "${idOrName}": ${response.statusText}`
+        `Failed to fetch pokemon species for "${normalized}": ${response.status} ${response.statusText}`
       );
     }
     return await response.json();
   } catch (error) {
-    if (idOrName.startsWith("deoxys")) {
+    // Alternate forms (e.g. "rotom-wash") are valid pokemon names but not
+    // pokemon-species names. Resolve species URL from the pokemon payload.
+    try {
+      const pokemonResponse = await fetch(`${baseURL}/pokemon/${normalized}`);
+      if (pokemonResponse.ok) {
+        const pokemonData = await pokemonResponse.json();
+        const speciesUrl = pokemonData.species?.url;
+
+        if (speciesUrl) {
+          const speciesResponse = await fetch(speciesUrl);
+          if (speciesResponse.ok) {
+            console.warn(
+              `[fetchPokemonSpecies] Resolved form "${normalized}" to species "${pokemonData.species.name}"`
+            );
+            return await speciesResponse.json();
+          }
+        }
+      }
+    } catch (speciesFallbackError) {
+      console.error(
+        `[fetchPokemonSpecies] Failed form->species fallback for "${normalized}":`,
+        speciesFallbackError
+      );
+    }
+
+    if (normalized.startsWith("deoxys")) {
       console.log("Re-handling Deoxys Fetch");
       return await fetchDeoxysFallback();
     }
+
     throw error;
   }
 }

@@ -42,7 +42,23 @@ export default function PokemonPage() {
     const fetchData = async () => {
       try {
         const pokemonData = await fetchAndFormatPokemon(pokemonID);
-        const speciesData = await fetchAndFormatPokemonSpecies(pokemonID);
+        let speciesData;
+
+        try {
+          speciesData = await fetchAndFormatPokemonSpecies(pokemonID);
+        } catch (speciesError) {
+          console.warn(
+            `[PokemonPage] Species data unavailable for "${pokemonID}":`,
+            speciesError
+          );
+          speciesData = {
+            color: "Unknown",
+            description: "No species description available for this form.",
+            generation: "Unknown",
+            category: "Unknown",
+          };
+        }
+
         setPokemon({ ...pokemonData, ...speciesData });
       } catch (error) {
         console.error("Error fetching Pokémon data:", error);
