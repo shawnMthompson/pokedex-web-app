@@ -226,7 +226,6 @@ export default function PokemonPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
