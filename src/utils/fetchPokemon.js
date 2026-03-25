@@ -75,28 +75,6 @@ export async function fetchPokemonSpecies(idOrName) {
       );
     }
 
-    if (normalized.startsWith("deoxys")) {
-      console.log("Re-handling Deoxys Fetch");
-      return await fetchDeoxysFallback();
-    }
-
     throw error;
-  }
-}
-
-async function fetchDeoxysFallback() {
-  try {
-    const fallbackResponse = await fetch(`${baseURL}/pokemon-species/deoxys`);
-    if (!fallbackResponse.ok) {
-      throw new Error(
-        `Failed to fetch fallback species for "deoxys": ${fallbackResponse.statusText}`
-      );
-    }
-    return await fallbackResponse.json();
-  } catch (fallbackError) {
-    console.error(
-      `Error fetching fallback species for "deoxys": ${fallbackError.message}`
-    );
-    throw fallbackError;
   }
 }
