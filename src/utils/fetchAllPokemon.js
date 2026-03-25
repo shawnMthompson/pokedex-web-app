@@ -57,8 +57,6 @@ export async function fetchAndFormatPokemonByNames(names) {
 }
 
 // Fetch and format a paginated slice of all pokemon
-
-// Fetch and format a paginated slice of all pokemon
 export async function fetchAndFormatAllPokemon(limit, offset) {
   const pokemonList = await fetchAllPokemon(limit, offset);
   return fetchAndFormatPokemonByNames(pokemonList.map((p) => p.name));

@@ -23,7 +23,7 @@ export function usePokemonPagination(filter = null) {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
 
-  // Capture the filter value at mount time — filter is static per page instance.
+  // Capture the filter value at mount time (filter is static per page instance).
   const filterRef = useRef(filter);
   // Cache of all names when using a filter (loaded on the first page fetch).
   const filteredNamesRef = useRef(null);

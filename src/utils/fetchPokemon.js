@@ -70,7 +70,7 @@ export async function fetchPokemonSpecies(idOrName) {
       }
     } catch (speciesFallbackError) {
       console.error(
-        `[fetchPokemonSpecies] Failed form->species fallback for "${normalized}":`,
+        `[fetchPokemonSpecies] Failed form -> species fallback for "${normalized}":`,
         speciesFallbackError
       );
     }

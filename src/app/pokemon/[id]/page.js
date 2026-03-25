@@ -11,7 +11,6 @@ import SearchBar from "@/components/SearchBar";
 import PokemonType from "@/components/PokemonType";
 import PokemonDetails from "@/components/PokemonDetails";
 import PokemonStats from "@/components/PokemonStats";
-import Footer from "@/components/Footer";
 import HeaderLogo from "../../../../public/logo.png";
 
 export async function fetchAndFormatPokemon(pokemonID) {
