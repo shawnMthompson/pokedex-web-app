@@ -1,8 +1,41 @@
 const baseURL = "https://pokeapi.co/api/v2";
+const maxRetryAttempts = 3;
+const baseRetryDelayMs = 250;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function shouldRetryStatus(status) {
+  return status === 429 || status >= 500;
+}
+
+async function fetchWithRetry(url) {
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxRetryAttempts; attempt += 1) {
+    try {
+      const response = await fetch(url);
+
+      if (!shouldRetryStatus(response.status) || attempt === maxRetryAttempts) {
+        return response;
+      }
+    } catch (error) {
+      lastError = error;
+      if (attempt === maxRetryAttempts) {
+        throw error;
+      }
+    }
+
+    await sleep(baseRetryDelayMs * attempt);
+  }
+
+  throw lastError ?? new Error(`Failed to fetch "${url}" after retries.`);
+}
 
 export async function fetchPokemon(idOrName) {
   const normalized = String(idOrName).toLowerCase();
-  const response = await fetch(`${baseURL}/pokemon/${normalized}`);
+  const response = await fetchWithRetry(`${baseURL}/pokemon/${normalized}`);
 
   if (response.ok) {
     return await response.json();
@@ -17,7 +50,9 @@ export async function fetchPokemon(idOrName) {
       const fallbackName = defaultVariety?.pokemon?.name;
 
       if (fallbackName && fallbackName !== normalized) {
-        const fallbackResponse = await fetch(`${baseURL}/pokemon/${fallbackName}`);
+        const fallbackResponse = await fetchWithRetry(
+          `${baseURL}/pokemon/${fallbackName}`
+        );
         if (fallbackResponse.ok) {
           console.warn(
             `[fetchPokemon] Resolved species "${normalized}" to default form "${fallbackName}"`
@@ -42,7 +77,7 @@ export async function fetchPokemonSpecies(idOrName) {
   const normalized = String(idOrName).toLowerCase();
 
   try {
-    const response = await fetch(`${baseURL}/pokemon-species/${normalized}`);
+    const response = await fetchWithRetry(`${baseURL}/pokemon-species/${normalized}`);
     if (!response.ok) {
       throw new Error(
         `Failed to fetch pokemon species for "${normalized}": ${response.status} ${response.statusText}`
@@ -53,13 +88,13 @@ export async function fetchPokemonSpecies(idOrName) {
     // Alternate forms (e.g. "rotom-wash") are valid pokemon names but not
     // pokemon-species names. Resolve species URL from the pokemon payload.
     try {
-      const pokemonResponse = await fetch(`${baseURL}/pokemon/${normalized}`);
+      const pokemonResponse = await fetchWithRetry(`${baseURL}/pokemon/${normalized}`);
       if (pokemonResponse.ok) {
         const pokemonData = await pokemonResponse.json();
         const speciesUrl = pokemonData.species?.url;
 
         if (speciesUrl) {
-          const speciesResponse = await fetch(speciesUrl);
+          const speciesResponse = await fetchWithRetry(speciesUrl);
           if (speciesResponse.ok) {
             console.warn(
               `[fetchPokemonSpecies] Resolved form "${normalized}" to species "${pokemonData.species.name}"`
@@ -77,4 +112,16 @@ export async function fetchPokemonSpecies(idOrName) {
 
     throw error;
   }
+}
+
+export async function fetchEvolutionChain(evolutionChainUrl) {
+  const response = await fetchWithRetry(evolutionChainUrl);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch evolution chain: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return await response.json();
 }

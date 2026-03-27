@@ -2,6 +2,7 @@ export function formatPokemon(rawData) {
   return {
     id: rawData.id,
     name: capitalize(rawData.name),
+    species_name: rawData.species.name,
     sprite: rawData.sprites.other["official-artwork"].front_default,
     types: rawData.types.map((typeInfo) => capitalize(typeInfo.type.name)),
     moves: rawData.moves.map((moveInfo) => cleanMove(moveInfo.move.name)),
@@ -29,6 +30,7 @@ export function formatPokemonSpecies(rawData) {
     description: getEnglishDescription(rawData.flavor_text_entries),
     generation: formatGeneration(rawData.generation.name),
     category: getEnglishGenus(rawData.genera),
+    evolution_chain_url: rawData.evolution_chain?.url,
   };
 }
 
