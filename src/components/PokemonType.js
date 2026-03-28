@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 // Single source of truth for Pokemon type badge colors.
-const TYPE_META = {
+export const TYPE_META = {
   bug: { color: "#A8B820" },
   dark: { color: "#705848" },
   dragon: { color: "#7038F8" },
