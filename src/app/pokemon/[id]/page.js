@@ -155,6 +155,7 @@ export default function PokemonPage() {
   const [evolutionPaths, setEvolutionPaths] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("details");
+  const [showShiny, setShowShiny] = useState(false);
 
   const router = useRouter();
   const handleClick = () => router.push("/");
@@ -162,6 +163,8 @@ export default function PokemonPage() {
   useEffect(() => {
     // Main fetch keeps base Pokemon data independent from evolution-chain failures.
     const fetchData = async () => {
+      setShowShiny(false);
+
       try {
         const pokemonData = await fetchAndFormatPokemon(pokemonID);
         let speciesData;
@@ -285,6 +288,11 @@ export default function PokemonPage() {
     return <p>Failed to load Pokémon data.</p>;
   }
 
+  const hasShinySprite = Boolean(pokemon.shiny_sprite);
+  const currentSprite = showShiny && hasShinySprite
+    ? pokemon.shiny_sprite
+    : pokemon.normal_sprite || pokemon.sprite;
+
   const pokemonDetails = [
     {
       label: "Pokedex ID",
@@ -386,14 +394,28 @@ export default function PokemonPage() {
       </div>
       <div className="flex-grow mx-auto flex flex-col md:flex-row justify-between p-4 w-full md:w-2/3">
         <div className="flex justify-center items-center md:w-1/2 mt-8 md:mt-0 order-1 md:order-2">
-          <Image
-            src={pokemon.sprite}
-            alt="Pokemon Sprite"
-            height={512}
-            width={512}
-            priority={true}
-            className="up-and-down"
-          />
+          <div className="flex flex-col items-center">
+            <Image
+              src={currentSprite}
+              alt={`${pokemon.name} ${showShiny ? "Shiny" : "Normal"} Sprite`}
+              height={512}
+              width={512}
+              priority={true}
+              className="up-and-down"
+            />
+            <button
+              type="button"
+              onClick={() => setShowShiny((previousValue) => !previousValue)}
+              disabled={!hasShinySprite}
+              className={`mb-5 border-2 p-2 bg-cardShadow hover:jiggle ${
+                !hasShinySprite
+                  ? "cursor-not-allowed opacity-50"
+                  : ""
+              }`}
+            >
+              {showShiny ? "Show Normal" : "Show Shiny"}
+            </button>
+          </div>
         </div>
         <div className="md:w-1/2 order-2 md:order-none">
           <h1 className="text-6xl font-bold mb-4 text-center md:text-left">

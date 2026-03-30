@@ -1,9 +1,15 @@
 export function formatPokemon(rawData) {
+  const officialArtwork = rawData.sprites.other["official-artwork"];
+  const normalSprite = officialArtwork.front_default || rawData.sprites.front_default;
+  const shinySprite = officialArtwork.front_shiny || rawData.sprites.front_shiny;
+
   return {
     id: rawData.id,
     name: capitalize(rawData.name),
     species_name: rawData.species.name,
-    sprite: rawData.sprites.other["official-artwork"].front_default,
+    sprite: normalSprite,
+    normal_sprite: normalSprite,
+    shiny_sprite: shinySprite,
     types: rawData.types.map((typeInfo) => capitalize(typeInfo.type.name)),
     moves: rawData.moves,
     height: rawData.height,
