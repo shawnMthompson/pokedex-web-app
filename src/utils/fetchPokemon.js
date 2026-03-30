@@ -125,3 +125,16 @@ export async function fetchEvolutionChain(evolutionChainUrl) {
 
   return await response.json();
 }
+
+export async function fetchMove(moveIdOrName) {
+  const normalized = String(moveIdOrName).toLowerCase();
+  const response = await fetchWithRetry(`${baseURL}/move/${normalized}`);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch move "${normalized}": ${response.status} ${response.statusText}`
+    );
+  }
+
+  return await response.json();
+}

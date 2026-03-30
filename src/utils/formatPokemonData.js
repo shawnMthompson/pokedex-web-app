@@ -5,7 +5,7 @@ export function formatPokemon(rawData) {
     species_name: rawData.species.name,
     sprite: rawData.sprites.other["official-artwork"].front_default,
     types: rawData.types.map((typeInfo) => capitalize(typeInfo.type.name)),
-    moves: rawData.moves.map((moveInfo) => cleanMove(moveInfo.move.name)),
+    moves: rawData.moves,
     height: rawData.height,
     weight: rawData.weight,
     abilities: rawData.abilities.map((abilityInfo) => {
@@ -39,7 +39,11 @@ function capitalize(text) {
 }
 
 function cleanMove(move) {
-  return move.replace("-", " ");
+  return move
+    .replace(/-/g, " ")
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 function cleanDescription(description) {
@@ -74,4 +78,76 @@ function formatGeneration(generation) {
     "generation-ix": "Generation IX",
   };
   return generationMapping[generation.toLowerCase()];
+}
+
+export async function formatMoves(rawMoves) {
+  const { fetchMove } = await import("./fetchPokemon.js");
+  const moves = [];
+  const seenMoves = new Set();
+  const moveDetailsMap = {};
+
+  // First pass: collect unique moves
+  rawMoves.forEach((moveInfo) => {
+    const moveName = capitalize(cleanMove(moveInfo.move.name));
+    const versionDetails = moveInfo.version_group_details || [];
+
+    versionDetails.forEach((detail) => {
+      const method = detail.move_learn_method?.name || "unknown";
+      const level = detail.level_learned_at || 0;
+
+      let moveType = "other";
+      if (method === "level-up") {
+        moveType = "level-up";
+      } else if (method === "machine") {
+        moveType = "machine";
+      }
+
+      const key = `${moveName}-${moveType}-${level}`;
+
+      if (!seenMoves.has(key)) {
+        seenMoves.add(key);
+        moves.push({
+          name: moveName,
+          moveNameLower: moveInfo.move.name,
+          method: moveType,
+          level: level,
+        });
+      }
+    });
+  });
+
+  // Second pass: fetch details for each unique move
+  const moveDetailPromises = moves.map(async (move) => {
+    try {
+      const moveData = await fetchMove(move.moveNameLower);
+      moveDetailsMap[move.moveNameLower] = {
+        type: moveData.type?.name || "unknown",
+        power: moveData.power || null,
+        accuracy: moveData.accuracy || null,
+        pp: moveData.pp || null,
+        damageClass: moveData.damage_class?.name || "unknown",
+      };
+    } catch (error) {
+      console.warn(`Failed to fetch details for move "${move.moveNameLower}":`, error);
+      moveDetailsMap[move.moveNameLower] = {
+        type: "unknown",
+        power: null,
+        accuracy: null,
+        pp: null,
+        damageClass: "unknown",
+      };
+    }
+  });
+
+  await Promise.all(moveDetailPromises);
+
+  // Third pass: enhance moves with fetched details
+  return moves.map((move) => ({
+    ...move,
+    ...moveDetailsMap[move.moveNameLower],
+  })).map((move) => {
+    // Remove the temporary moveNameLower field
+    const { moveNameLower, ...cleanedMove } = move;
+    return cleanedMove;
+  });
 }

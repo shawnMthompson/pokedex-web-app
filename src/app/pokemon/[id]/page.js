@@ -8,13 +8,14 @@ import {
   fetchPokemonSpecies,
   fetchEvolutionChain,
 } from "@/utils/fetchPokemon";
-import { formatPokemon, formatPokemonSpecies } from "@/utils/formatPokemonData";
+import { formatPokemon, formatPokemonSpecies, formatMoves } from "@/utils/formatPokemonData";
 import Image from "next/image";
 
 import SearchBar from "@/components/SearchBar";
 import PokemonType from "@/components/PokemonType";
 import PokemonDetails from "@/components/PokemonDetails";
 import PokemonStats from "@/components/PokemonStats";
+import PokemonMoves from "@/components/PokemonMoves";
 import EvolutionLine from "@/components/EvolutionLine";
 import HeaderLogo from "../../../../public/logo.png";
 
@@ -136,7 +137,8 @@ export async function fetchAndFormatPokemon(pokemonID) {
   const lowercasedID = pokemonID.toLowerCase();
   const rawData = await fetchPokemon(lowercasedID);
   const formattedData = formatPokemon(rawData);
-  return formattedData;
+  const formattedMoves = await formatMoves(rawData.moves);
+  return { ...formattedData, moves: formattedMoves };
 }
 
 export async function fetchAndFormatPokemonSpecies(pokemonID) {
@@ -439,6 +441,12 @@ export default function PokemonPage() {
           paths={evolutionPaths}
           currentSpeciesName={pokemon.species_name}
         />
+      </div>
+      <div className="flex justify-center px-4 py-8 md:px-8 lg:px-12">
+        <div className="w-full md:w-2/3">
+          <h2 className="text-4xl font-bold mb-6 text-center md:text-left">Moves</h2>
+          <PokemonMoves moves={pokemon.moves} />
+        </div>
       </div>
     </div>
   );
